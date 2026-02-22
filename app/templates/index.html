@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="card mb-4 shadow-sm">
+    <div class="card-body">
+        <h5 class="card-title">Total Expenses</h5>
+        <h2 class="text-danger">${{ "%.2f"|format(total) }}</h2>
+    </div>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <h5 class="card-title">All Expenses</h5>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Category</th>
+                    <th>Amount</th>
+                    <th>Date</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for expense in expenses %}
+                <tr>
+                    <td>{{ expense.title }}</td>
+                    <td><span class="badge bg-secondary">{{ expense.category }}</span></td>
+                    <td class="text-danger">${{ "%.2f"|format(expense.amount) }}</td>
+                    <td>{{ expense.date.strftime('%Y-%m-%d') }}</td>
+                    <td>
+                        <a href="/delete/{{ expense.id }}" 
+                           class="btn btn-danger btn-sm"
+                           onclick="return confirm('Delete this expense?')">Delete</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% if not expenses %}
+        <p class="text-muted text-center">No expenses yet. Add one!</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
