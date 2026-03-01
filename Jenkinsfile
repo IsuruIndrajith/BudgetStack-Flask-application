@@ -17,13 +17,13 @@ pipeline {
 
         stage('Tear Down Old Containers') {
             steps {
-                sh 'docker compose down || true'
+                sh 'docker-compose down || true'
             }
         }
 
         stage('Deploy Containers') {
             steps {
-                sh 'docker compose up -d --build'
+                sh 'docker-compose up -d --build'
             }
         }
 
@@ -46,7 +46,7 @@ pipeline {
         }
         failure {
             echo 'Pipeline failed. Check logs above.'
-            sh 'docker compose logs'
+            sh 'docker-compose logs'
         }
     }
 }
