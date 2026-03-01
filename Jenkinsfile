@@ -29,7 +29,19 @@ pipeline {
 
         stage('Wait for DB to be Ready') {
             steps {
-                sh 'sleep 15'
+                sh '''
+                    echo "Waiting for MySQL to be ready..."
+                    for i in $(seq 1 30); do
+                        if docker-compose exec -T db mysqladmin ping -h localhost -u root -prootpassword --silent; then
+                            echo "MySQL is ready!"
+                            exit 0
+                        fi
+                        echo "Attempt $i/30 - MySQL not ready yet, waiting 10s..."
+                        sleep 10
+                    done
+                    echo "MySQL failed to be ready in time"
+                    exit 1
+                '''
             }
         }
 
