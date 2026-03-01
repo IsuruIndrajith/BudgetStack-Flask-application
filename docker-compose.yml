@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    container_name: expense_tracker_web
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_APP=run.py
+      - FLASK_ENV=production
+      - DATABASE_URL=mysql+pymysql://isuru:1234@db:3306/expense_db
+      - SECRET_KEY=your-secret-key-change-in-production
+    depends_on:
+      - db
+    volumes:
+      - .:/app
+    networks:
+      - expense_network
+    restart: unless-stopped
+
+  db:
+    image: mysql:8.0
+    container_name: expense_tracker_db
+    environment:
+      - MYSQL_ROOT_PASSWORD=root_password
+      - MYSQL_USER=isuru
+      - MYSQL_PASSWORD=1234
+      - MYSQL_DATABASE=expense_db
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - expense_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+networks:
+  expense_network:
+    driver: bridge
+
+volumes:
+  db_data:
