@@ -76,6 +76,7 @@ services:
       - "5000:5000"
     environment:
       DATABASE_URL: mysql+pymysql://isuru:1234@db:3306/expense_db
+      SECRET_KEY: 1234567890abcdef
     depends_on:
       db:
         condition: service_healthy

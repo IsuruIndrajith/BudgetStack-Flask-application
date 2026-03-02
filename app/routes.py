@@ -42,6 +42,11 @@ def delete_expense(id):
 @main.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
+        # Check if email already exists
+        existing = User.query.filter_by(email=request.form['email']).first()
+        if existing:
+            return render_template('register.html', error='Email already registered')
+        
         user = User(
             username=request.form['username'],
             email=request.form['email']
@@ -59,6 +64,7 @@ def login():
         if user and user.check_password(request.form['password']):
             session['user_id'] = user.id
             return redirect(url_for('main.index'))
+        return render_template('login.html', error='Invalid email or password')
     return render_template('login.html')
 
 @main.route('/logout')
