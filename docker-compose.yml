@@ -57,6 +57,7 @@ services:
       MYSQL_DATABASE: expense_db
       MYSQL_USER: isuru
       MYSQL_PASSWORD: 1234
+      MYSQL_ROOT_HOST: '%'
     command: --innodb-buffer-pool-size=128M
     mem_limit: 512m
     ports:
